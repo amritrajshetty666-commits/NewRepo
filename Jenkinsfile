@@ -18,7 +18,8 @@ pipeline {
                     set -eu
                     command -v python3
                     python3 --version
-                    python3 -m venv .venv-ci .venv-ci/bin/python -m pip install -r backend/requirements.txt -r requirements-dev.txt
+                    python3 -m venv .venv-ci 
+                    .venv-ci/bin/python -m pip install -r backend/requirements.txt -r requirements-dev.txt
                 '''
             }
         }
