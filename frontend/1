@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DevOps Orders Lab</title>
+</head>
+<body>
+  <h1>DevOps Orders Lab</h1>
+  <p>Architecture: Nginx → FastAPI → PostgreSQL</p>
+
+  <h2>Backend health</h2>
+  <pre id="health">Checking...</pre>
+  <button onclick="checkHealth()">Check health</button>
+
+  <h2>Orders</h2>
+  <button onclick="loadOrders()">Load orders</button>
+  <pre id="orders">Click to load orders</pre>
+
+  <h2>Create a test order</h2>
+  <input id="customer" placeholder="Customer name" value="Test Customer">
+  <input id="amount" type="number" placeholder="Amount" value="500">
+  <button onclick="createOrder()">Create order</button>
+  <pre id="result"></pre>
+
+  <script>
+    async function checkHealth() {
+      try {
+        const response = await fetch('/api/health');
+        document.getElementById('health').textContent =
+          JSON.stringify(await response.json(), null, 2);
+      } catch (error) {
+        document.getElementById('health').textContent = String(error);
+      }
+    }
+
+    async function loadOrders() {
+      const response = await fetch('/api/orders');
+      document.getElementById('orders').textContent =
+        JSON.stringify(await response.json(), null, 2);
+    }
+
+    async function createOrder() {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          customer_name: document.getElementById('customer').value,
+          amount: Number(document.getElementById('amount').value)
+        })
+      });
+      document.getElementById('result').textContent =
+        JSON.stringify(await response.json(), null, 2);
+    }
+
+    checkHealth();
+  </script>
+</body>
+</html>
+
